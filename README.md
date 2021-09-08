@@ -1,4 +1,5 @@
 # simdb
+
 A simple json db in GO
 
 I sometimes write programs for RaspberryPi using nodejs and use a json file as a data storage. There are so many libraries in nodejs to deal with json file as a data storage. I could'nt find a similar library in GO to use in GO based RPi projects. So decided to write one.
@@ -16,7 +17,7 @@ Let's have a look at, how to store some data and manipulate them using simd.
 ```
 package main
 
-import "github.com/sonyarouje/simdb/db"
+import "github.com/Anonghost720/simdb/db"
 
 type Customer struct {
 	CustID string `json:"custid"`
@@ -30,7 +31,7 @@ type Contact struct {
 	Email string `json:"email"`
 }
 
-//ID any struct that needs to persist should implement this function defined 
+//ID any struct that needs to persist should implement this function defined
 //in Entity interface.
 func (c Customer) ID() (jsonField string, value interface{}) {
 	value=c.CustID
@@ -43,7 +44,7 @@ func main() {
     if(err!=nil){
       panic(err)
     }
-  
+
     customer:=Customer {
       CustID:"CUST1",
       Name:"sarouje",
@@ -52,7 +53,7 @@ func main() {
         Phone:"45533355",
         Email:"someone@gmail.com",
       },
-    }    
+    }
    }
 
   //creates a new Customer file inside the directory passed as the parameter to New()
@@ -61,7 +62,7 @@ func main() {
   if(err!=nil){
     panic(err)
   }
-  
+
   //GET ALL Customer
   //opens the customer json file and filter all the customers with name sarouje.
   //AsEntity takes a pointer to Customer array and fills the result to it.
@@ -71,33 +72,31 @@ func main() {
   if(err!=nil){
     panic(err)
   }
-  
+
   //GET ONE Customer
-  //First() will return the first record from the results 
+  //First() will return the first record from the results
   //AsEntity takes a pointer to Customer variable (not an array pointer)
   var customerFrist Customer
   err=driver.Open(Customer{}).Where("custid","=","CUST1").First().AsEntity(&customerFrist)
   if(err!=nil){
     panic(err)
   }
-  
+
   //Update function uses the ID() to get the Id field/value to find the record and update the data.
   customerFrist.Name="Sony Arouje"
   err=driver.Update(customerFrist)
   if(err!=nil){
     panic(err)
   }
-  
+
   //Delete
   toDel:=Customer{
      CustID:"CUST1",
   }
   err=driver.Delete(toDel)
 }
-  
+
 ```
-
-
 
 Started as a library to learn GO.
 
